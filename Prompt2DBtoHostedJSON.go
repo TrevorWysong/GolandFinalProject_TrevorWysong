@@ -1,20 +1,13 @@
 package main
 
 import (
-	"bufio"
 	"database/sql"
 	"encoding/json"
-	_ "encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
-	_ "github.com/gorilla/mux"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
-	_ "log"
 	"net/http"
-	_ "net/http"
-	"os"
-	"strings"
 )
 
 // Student declares `Student` structure
@@ -99,7 +92,10 @@ type Game struct {
 	MacRecReqsText              string
 }
 
-func processDBtoStruct(gameName string) (Game, bool) {
+func getGame(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r) // Gets params
+
 	db, err := sql.Open("sqlite3", "./GameData.db")
 	if err != nil {
 		log.Fatal(err)
@@ -110,7 +106,6 @@ func processDBtoStruct(gameName string) (Game, bool) {
 		panic(err)
 	}
 
-	var gameFound bool
 	chosenGame := Game{}
 
 	for rows.Next() {
@@ -138,11 +133,11 @@ func processDBtoStruct(gameName string) (Game, bool) {
 			&chosenGame.PCRecReqsText, &chosenGame.LinuxMinReqsText, &chosenGame.LinuxRecReqsText,
 			&chosenGame.MacMinReqsText, &chosenGame.MacRecReqsText)
 
-		if chosenGame.QueryName == gameName {
-			gameFound = true
+		if chosenGame.QueryName == params["gameName"] {
+			json.NewEncoder(w).Encode(chosenGame)
 			rows.Close()
 			db.Close()
-			return chosenGame, gameFound
+			return
 		}
 	}
 	rows.Close()
@@ -151,42 +146,26 @@ func processDBtoStruct(gameName string) (Game, bool) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return chosenGame, gameFound
 }
 
-func getUserInput() string {
+func printGameInfo() {
 	// Creates info section and prints the request for user input
 	fmt.Println("...........................................................................")
 	fmt.Println("This is a program to search for a game and receive JSON as a response. ")
 	fmt.Println("...........................................................................")
-	fmt.Print("Enter the name of the song here: ")
-
-	// Reads in user input
-	// Used bufio because scanner wouldn't read in anything after a space(s)
-	inputReader := bufio.NewReader(os.Stdin)
-	nameOfGame, _ := inputReader.ReadString('\n')
-	return strings.TrimSuffix(nameOfGame, "\n")
-}
-
-func helloWorld(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "hello world")
-}
-
-func handleRequests() {
-	myRouter := mux.NewRouter().StrictSlash(true)
-	myRouter.HandleFunc("/", helloWorld).Methods("GET")
-	log.Fatal(http.ListenAndServe(":8081", myRouter))
+	fmt.Println("http://localhost:3000/")
+	fmt.Println("...........................................................................")
 }
 
 func main() {
-	nameOfGame := getUserInput()
-	chosenGame, foundInputMatch := processDBtoStruct(nameOfGame)
+	printGameInfo()
 
-	if foundInputMatch == true {
-		gameJSON, _ := json.Marshal(chosenGame)
-		fmt.Println(string(gameJSON))
-		handleRequests()
-	} else {
-		fmt.Println("Game not in database.")
-	}
+	r := mux.NewRouter()
+
+	// Route handles & endpoints
+	r.HandleFunc("/game/{gameName}", getGame).Methods("GET")
+
+	// Start server
+	log.Fatal(http.ListenAndServe(":3000", r))
+
 }
