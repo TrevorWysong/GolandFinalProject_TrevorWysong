@@ -92,21 +92,25 @@ type Game struct {
 	MacRecReqsText              string
 }
 
+func getDefaultScreen(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "This is an API. Search for game with endpoint /game/{gameName}")
+}
+
 func getGame(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r) // Gets params
+	chosenGame := Game{}
 
 	db, err := sql.Open("sqlite3", "./GameData.db")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
+
 	rows, err := db.Query("SELECT * FROM GameTable")
 	if err != nil {
 		panic(err)
 	}
-
-	chosenGame := Game{}
 
 	for rows.Next() {
 		err = rows.Scan(&chosenGame.QueryID, &chosenGame.ResponseID, &chosenGame.QueryName, &chosenGame.ResponseName,
@@ -163,9 +167,11 @@ func main() {
 	r := mux.NewRouter()
 
 	// Route handles & endpoints
+	//r.HandleFunc("/game", getGames).Methods("GET")
+	r.HandleFunc("/", getDefaultScreen).Methods("GET")
+
 	r.HandleFunc("/game/{gameName}", getGame).Methods("GET")
 
 	// Start server
 	log.Fatal(http.ListenAndServe(":3000", r))
-
 }
