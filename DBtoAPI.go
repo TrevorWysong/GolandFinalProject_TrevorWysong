@@ -167,7 +167,6 @@ func main() {
 	r := mux.NewRouter()
 
 	// Route handles & endpoints
-	//r.HandleFunc("/game", getGames).Methods("GET")
 	r.HandleFunc("/", getDefaultScreen).Methods("GET")
 
 	r.HandleFunc("/game/{gameName}", getGame).Methods("GET")

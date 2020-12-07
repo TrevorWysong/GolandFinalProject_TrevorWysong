@@ -8,108 +8,6 @@ import (
 	"log"
 )
 
-func main() {
-	openedExcel, err := excelize.OpenFile("games-features.xlsx")
-	if err != nil {
-		println(err.Error())
-		return
-	}
-	rows, err := openedExcel.GetRows("games-features")
-	for _, row := range rows {
-		fmt.Println(row, "\t")
-		A := row[0]
-		B := row[1]
-		C := row[2]
-		D := row[3]
-		E := row[4]
-		F := row[5]
-		G := row[6]
-		H := row[7]
-		I := row[8]
-		J := row[9]
-		K := row[10]
-		L := row[11]
-		M := row[12]
-		N := row[13]
-		O := row[14]
-		P := row[15]
-		Q := row[16]
-		R := row[17]
-		S := row[18]
-		T := row[19]
-		U := row[20]
-		V := row[21]
-		W := row[22]
-		X := row[23]
-		Y := row[24]
-		Z := row[25]
-		AA := row[26]
-		AB := row[27]
-		AC := row[28]
-		AD := row[29]
-		AE := row[30]
-		AF := row[31]
-		AG := row[32]
-		AH := row[33]
-		AI := row[34]
-		AJ := row[35]
-		AK := row[36]
-		AL := row[37]
-		AM := row[38]
-		AN := row[39]
-		AO := row[40]
-		AP := row[41]
-		AQ := row[42]
-		AR := row[43]
-		AS := row[44]
-		AT := row[45]
-		AU := row[46]
-		AV := row[47]
-		AW := row[48]
-		AX := row[49]
-		AY := row[50]
-		AZ := row[51]
-		BA := row[52]
-		BB := row[53]
-		BC := row[54]
-		BD := row[55]
-		BE := row[56]
-		BF := row[57]
-		BG := row[58]
-		BH := row[59]
-		BI := row[60]
-		BJ := row[61]
-		BK := row[62]
-		BL := row[63]
-		BM := row[64]
-		BN := row[65]
-		BO := row[66]
-		BP := row[67]
-		BQ := row[68]
-		BR := row[69]
-		BS := row[70]
-		BT := row[71]
-		BU := row[72]
-		BV := row[73]
-		BW := row[74]
-		BX := row[75]
-		BY := row[76]
-		BZ := row[77]
-		myDatabase := OpenDataBase("./GameData.db")
-		create_table(myDatabase)
-		defer myDatabase.Close()
-		insert_data(myDatabase, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
-			AA, AB, AC, AD, AE, AF, AG, AH, AI, AJ, AK, AL, AM, AN, AO, AP, AQ, AR, AS, AT, AU, AV, AW, AX, AY, AZ,
-			BA, BB, BC, BD, BE, BF, BG, BH, BI, BJ, BK, BL, BM, BN, BO, BP, BQ, BR, BS, BT, BU, BV, BW, BX, BY, BZ)
-	}
-	GameDB()
-}
-func GameDB() {
-	myDatabase := OpenDataBase("./GameData.db")
-	defer myDatabase.Close()
-	create_table(myDatabase)
-}
-
 func OpenDataBase(dbfile string) *sql.DB {
 	database, err := sql.Open("sqlite3", dbfile)
 	if err != nil {
@@ -124,7 +22,6 @@ func create_table(database *sql.DB) {
 		"ResponseID INTEGER," +
 		"QueryName TEXT," +
 		"ResponseName TEXT," +
-
 		"ReleaseDate DATE," +
 		"RequiredAge INTEGER," +
 		"DemoCount INTEGER," +
@@ -201,12 +98,14 @@ func create_table(database *sql.DB) {
 		"MacRecReqsText TEXT);"
 	database.Exec(createStatement1)
 }
+
 func insert_data(database *sql.DB, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P,
 	Q, R, S, T, U, V, W, X, Y, Z, AA, AB, AC, AD, AE, AF, AG, AH, AI, AJ, AK, AL,
 	AM, AN, AO, AP, AQ, AR, AS, AT, AU, AV, AW, AX, AY, AZ, BA, BB, BC, BD, BE, BF, BG,
 	BH, BI, BJ, BK, BL, BM, BN, BO, BP, BQ, BR, BS, BT, BU, BV, BW, BX, BY, BZ string) {
 
 	insertStatement := "INSERT INTO GameTable(QueryID,ResponseID,QueryName,ResponseName,ReleaseDate,RequiredAge,DemoCount,DeveloperCount,DLCCount,Metacritic,MovieCount,PackageCount,RecommendationCount,PublisherCount,ScreenshotCount,SteamSpyOwners,SteamSpyOwnersVariance,SteamSpyPlayersEstimate,SteamSpyPlayersVariance,AchievementCount,AchievementHighlightedCount,ControllerSupport,IsFree,FreeVerAvail,PurchaseAvail,SubscriptionAvail,PlatformWindows,PlatformLinux,PlatformMac,PCReqsHaveMin,PCReqsHaveRec,LinuxReqsHaveMin,LinuxReqsHaveRec,MacReqsHaveMin,MacReqsHaveRec,CategorySinglePlayer,CategoryMultiplayer,CategoryCoop,CategoryMMO,CategoryInAppPurchase,CategoryIncludeSrcSDK,CategoryIncludeLevelEditor,CategoryVRSupport,GenreIsNonGame,GenreIsIndie,GenreIsAction,GenreIsAdventure,GenreIsCasual,GenreIsStrategy,GenreIsRPG,GenreIsSimulation,GenreIsEarlyAccess,GenreIsFreeToPlay,GenreIsSports,GenreIsRacing,GenreIsMassivelyMultiplayer,PriceCurrency,PriceInitial,PriceFinal,SupportEmail,SupportURL,AboutText,Background,ShortDescrip,DetailedDescrip,DRMNotice,ExtUserAcctNotice,HeaderImage,LegalNotice,Reviews,SupportedLanguages,Website,PCMinReqsText,PCRecReqsText,LinuxMinReqsText,LinuxRecReqsText,MacMinReqsText,MacRecReqsText) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"
+
 	prepped_statement, err := database.Prepare(insertStatement)
 	if err != nil {
 		log.Fatal(err)
@@ -214,4 +113,103 @@ func insert_data(database *sql.DB, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, 
 	prepped_statement.Exec(A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, AA, AB, AC, AD,
 		AE, AF, AG, AH, AI, AJ, AK, AL, AM, AN, AO, AP, AQ, AR, AS, AT, AU, AV, AW, AX, AY, AZ, BA, BB,
 		BC, BD, BE, BF, BG, BH, BI, BJ, BK, BL, BM, BN, BO, BP, BQ, BR, BS, BT, BU, BV, BW, BX, BY, BZ)
+}
+
+func main() {
+	openedExcel, err := excelize.OpenFile("games-features.xlsx")
+	if err != nil {
+		println(err.Error())
+		return
+	}
+	column, err := openedExcel.GetRows("games-features")
+	for _, column := range column {
+		fmt.Println(column, "\t")
+		A := column[0]
+		B := column[1]
+		C := column[2]
+		D := column[3]
+		E := column[4]
+		F := column[5]
+		G := column[6]
+		H := column[7]
+		I := column[8]
+		J := column[9]
+		K := column[10]
+		L := column[11]
+		M := column[12]
+		N := column[13]
+		O := column[14]
+		P := column[15]
+		Q := column[16]
+		R := column[17]
+		S := column[18]
+		T := column[19]
+		U := column[20]
+		V := column[21]
+		W := column[22]
+		X := column[23]
+		Y := column[24]
+		Z := column[25]
+		AA := column[26]
+		AB := column[27]
+		AC := column[28]
+		AD := column[29]
+		AE := column[30]
+		AF := column[31]
+		AG := column[32]
+		AH := column[33]
+		AI := column[34]
+		AJ := column[35]
+		AK := column[36]
+		AL := column[37]
+		AM := column[38]
+		AN := column[39]
+		AO := column[40]
+		AP := column[41]
+		AQ := column[42]
+		AR := column[43]
+		AS := column[44]
+		AT := column[45]
+		AU := column[46]
+		AV := column[47]
+		AW := column[48]
+		AX := column[49]
+		AY := column[50]
+		AZ := column[51]
+		BA := column[52]
+		BB := column[53]
+		BC := column[54]
+		BD := column[55]
+		BE := column[56]
+		BF := column[57]
+		BG := column[58]
+		BH := column[59]
+		BI := column[60]
+		BJ := column[61]
+		BK := column[62]
+		BL := column[63]
+		BM := column[64]
+		BN := column[65]
+		BO := column[66]
+		BP := column[67]
+		BQ := column[68]
+		BR := column[69]
+		BS := column[70]
+		BT := column[71]
+		BU := column[72]
+		BV := column[73]
+		BW := column[74]
+		BX := column[75]
+		BY := column[76]
+		BZ := column[77]
+		gameDatabase := OpenDataBase("./GameData.db")
+		create_table(gameDatabase)
+		defer gameDatabase.Close()
+		insert_data(gameDatabase, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
+			AA, AB, AC, AD, AE, AF, AG, AH, AI, AJ, AK, AL, AM, AN, AO, AP, AQ, AR, AS, AT, AU, AV, AW, AX, AY, AZ,
+			BA, BB, BC, BD, BE, BF, BG, BH, BI, BJ, BK, BL, BM, BN, BO, BP, BQ, BR, BS, BT, BU, BV, BW, BX, BY, BZ)
+	}
+	gameDatabase := OpenDataBase("./GameData.db")
+	defer gameDatabase.Close()
+	create_table(gameDatabase)
 }
